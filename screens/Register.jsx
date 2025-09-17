@@ -1,5 +1,6 @@
-import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, View, TextInput } from "react-native";
+// Register.jsx
+import React, { useState } from "react";
+import { SafeAreaView, Text, TouchableOpacity, View, TextInput, Alert } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 
 const COLORS = {
@@ -8,6 +9,37 @@ const COLORS = {
 };
 
 export default function Register({ navigation }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = async () => {
+    if (!name || !email || !password) {
+      Alert.alert("Error", "Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://192.168.0.100:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Registration successful! Please login.");
+        navigation.navigate("Login");
+      } else {
+        Alert.alert("Error", data.message || "Registration failed");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to connect to server");
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.black }}>
       {/* Header */}
@@ -23,14 +55,23 @@ export default function Register({ navigation }) {
         <TextInput
           placeholder="Name & Surname"
           placeholderTextColor="#888"
+          value={name}
+          onChangeText={setName}
           style={styles.input}
         />
-        <TextInput placeholder="Email" placeholderTextColor="#888" style={styles.input} />
-        <TextInput placeholder="Username" placeholderTextColor="#888" style={styles.input} />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#888"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
         <TextInput
           placeholder="Password"
           placeholderTextColor="#888"
           secureTextEntry
+          value={password}
+          onChangeText={setPassword}
           style={styles.input}
         />
 
@@ -43,6 +84,7 @@ export default function Register({ navigation }) {
             alignItems: "center",
             marginTop: 20,
           }}
+          onPress={handleRegister}
         >
           <Text style={{ fontWeight: "bold", fontSize: 16, color: COLORS.black }}>Register</Text>
         </TouchableOpacity>
