@@ -1,8 +1,21 @@
 // MovieCard.jsx
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import MovieDetails from "../screens/MovieDetails";
 
 export default function MovieCard({ movie, onAddToCart }) {
+  const [showDetails, setShowDetails] = useState(false);
+
+    //Show Movie Details Popup
+  const handleShowDetails = () => {
+    setShowDetails(true);
+  };
+    //Close Movie Details Popup
+  const handleCloseDetails = () => {
+    setShowDetails(false);
+  };
+
+
   return (
     <View style={styles.card}>
       {/* Background image */}
@@ -24,10 +37,19 @@ export default function MovieCard({ movie, onAddToCart }) {
         <Text style={styles.price}>R {movie.dailyRate}</Text>
         <Text style={styles.rating}>⭐ {movie.rating}</Text>
 
-        <TouchableOpacity style={styles.button} onPress={onAddToCart}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <TouchableOpacity style={styles.detailsButton} onPress={() => setShowDetails(true)}>
+            <Text style={styles.detailsButtonText}>View Details</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={onAddToCart}>
+            <Text style={styles.buttonText}>Add to Cart</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+      
+      {showDetails && (
+        <MovieDetails movie={movie} onClose={() => setShowDetails(false)} />
+      )}
     </View>
   );
 }
@@ -93,14 +115,29 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   button: {
-    backgroundColor: "rgba(64,224,208,0.15)", // glassy turquoise
-    borderWidth: 1,
-    borderColor: "#40E0D0",
+    backgroundColor: "#40E0D0",
+    color: "#000",
     paddingVertical: 8,
     borderRadius: 8,
     alignItems: "center",
+    paddingHorizontal: 10,
+    marginBottom: 6,
   },
   buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  detailsButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#40E0D0",
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 6,
+    paddingHorizontal: 10,
+  },
+  detailsButtonText: {
     color: "#40E0D0",
     fontWeight: "bold",
   },

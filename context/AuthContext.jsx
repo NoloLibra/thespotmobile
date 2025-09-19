@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   // Update user info (e.g., name, password)
   const updateUser = async (updates) => {
     try {
-      const response = await fetch("http://192.168.0.100:5000/api/auth/me", {
+      const response = await fetch("http://192.168.18.62:5000/api/auth/me", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

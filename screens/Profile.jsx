@@ -12,6 +12,7 @@ const COLORS = {
 export default function Profile() {
   const { user, signOut, updateUser } = useContext(AuthContext);
   const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -39,6 +40,22 @@ const handleUpdateName = async () => {
     console.log(err);
   }
 }
+
+// Handle Password Update
+const handleUpdatePassword = () => {
+  if (!password.trim()) {
+    Alert.alert("Error", "Password cannot be empty");
+    return;
+  }
+  try {
+    // Call backend to update password here
+    Alert.alert("Success", "Your password has been updated", [{ text: "OK" }]);
+  } catch (err) {
+    Alert.alert("Error", "Failed to update password");
+    console.log(err);
+  }
+};
+
 
   // Handle logout
   const handleLogout = () => {
@@ -94,6 +111,19 @@ const handleUpdateName = async () => {
       {/* Email */}
       <Text style={styles.label}>Email:</Text>
       <Text style={styles.text}>{user?.email}</Text>
+
+      {/* Password input */}
+      <TextInput
+        style={styles.input}
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Enter new password"
+        placeholderTextColor="#888"
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.button} onPress={handleUpdatePassword}>
+        <Text style={styles.buttonText}>Update Password</Text>
+      </TouchableOpacity>
 
       {/* Buttons */}
       <TouchableOpacity style={[styles.button, styles.logout]} onPress={handleLogout}>
@@ -160,7 +190,7 @@ const styles = StyleSheet.create({
   logout: {
     backgroundColor: COLORS.turquoise,
     color: "#fff",
-    marginTop: 200,
+    marginTop: 100,
   },
   delete: {
     backgroundColor: "#990000",

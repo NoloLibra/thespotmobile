@@ -11,14 +11,16 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieCard from "../components/MovieCard";
+import MovieDetails from "./MovieDetails";
 
-const API_URL = "http://192.168.0.100:5000/api/items";
+const API_URL = "http://192.168.18.62:5000/api/items";
 
 export default function Home({ addToCart }) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -43,12 +45,12 @@ export default function Home({ addToCart }) {
       </View>
     );
   }
-   const featuredMovie = movies[3];
+  const featuredMovie = movies[3];
   const featuredMovies = movies.slice(0, 4);
   const genres = ["All", ...new Set(movies.map((movie) => movie.genre))];
-  const heroMovie = movies[3]; // first movie as hero
+  const heroMovie = movies[2]; // first movie as hero
 
-  // filter movies based on selected genre
+  // filtering section
   const filteredMovies =
     selectedGenre === "All"
       ? movies
@@ -82,17 +84,20 @@ export default function Home({ addToCart }) {
                 <TouchableOpacity style={styles.glassButton} onPress={() => addToCart(featuredMovie)}>
                   <Text style={styles.glassButtonText}>RENT</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.glassButtonSecondary}>
+                <TouchableOpacity style={styles.glassButtonSecondary} onPress={() => setShowDetails(true)}>
                   <Text style={styles.glassButtonText}>VIEW INFO</Text>
                 </TouchableOpacity>
               </View>
+              {showDetails && (
+                <MovieDetails movie={heroMovie} onClose={() => setShowDetails(false)} />
+              )}
             </View>
           </ImageBackground>
         )}
 
         {/* Genre Filter */}
         <View style={styles.filterBar}>
-          {["All", "Action", "Comedy", "Drama", "Horror"].map((genre) => (
+          {["All", "Action", "Comedy", "Drama", "Horror", "Crime", "Thriller","Romance"].map((genre) => (
             <TouchableOpacity
               key={genre}
               style={[

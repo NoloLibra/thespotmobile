@@ -16,7 +16,7 @@ export default function Cart({ cartItems, removeFromCart, clearCart }) {
 
   const handleRentAll = () => {
     if (cartItems.length === 0) return Alert.alert("Cart is empty");
-    Alert.alert("Success", `You rented all movies for R ${totalPrice}`);
+    Alert.alert("Great!", `You've rented all movies for R ${totalPrice}`);
     clearCart();
   };
 
